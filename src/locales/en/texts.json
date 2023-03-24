@@ -215,6 +215,7 @@
     },
     "spatialExtent": "Spatial Extent",
     "temporalExtent": "Temporal Extent",
+    "forecast_ReferenceDatetime": "Forecast Extent",
     "title": "Search"
   },
   "showMore": "Show more...",

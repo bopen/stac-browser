@@ -13,6 +13,13 @@
           />
         </b-form-group>
 
+        <b-form-group v-if="canFilterExtents" :label="$t('search.forecast_ReferenceDatetime')" label-for="forecast:reference_datetime" :description="$t('search.dateDescription')">
+          <date-picker
+            range id="dateforecast:reference_datetimetime" :lang="datepickerLang" :format="datepickerFormat"
+            :value="query.forecastDatetime" @input="setForecastDatetime" input-class="form-control mx-input"
+          />
+        </b-form-group>
+
         <b-form-group v-if="canFilterExtents" :label="$t('search.spatialExtent')" label-for="provideBBox">
           <b-form-checkbox id="provideBBox" v-model="provideBBox" value="1" @change="setBBox">{{ $t('search.filterBySpatialExtent') }}</b-form-checkbox>
           <Map class="mb-4" v-if="provideBBox" :stac="stac" selectBounds @bounds="setBBox" scrollWheelZoom />
@@ -59,28 +66,6 @@
           </multiselect>
         </b-form-group>
 
-        <div class="additional-filters" v-if="canFilterCql && Array.isArray(queryables) && queryables.length > 0">
-          <b-form-group :label="$t('search.additionalFilters')" label-for="availableFields">
-            <b-alert variant="warning" show>{{ $t('featureExperimental') }}</b-alert>
-
-            <b-dropdown size="sm" :text="$t('search.addFilter')" block variant="primary" class="mt-2 mb-3" menu-class="w-100">
-              <b-dropdown-item v-for="queryable in queryables" :key="queryable.id" @click="additionalFieldSelected(queryable)">
-                {{ queryable.title }}
-              </b-dropdown-item>
-            </b-dropdown>
-
-            <QueryableInput
-              v-for="(filter, index) in query.filters" :key="filter.id"
-              :title="filter.queryable.title"
-              :value.sync="filter.value"
-              :operator.sync="filter.operator"
-              :schema="filter.queryable.schema"
-              :index="index"
-              @remove-queryable="removeQueryable(index)"
-            />
-          </b-form-group>
-        </div>
-
         <b-form-group v-if="canSort" :label="$t('sort.title')" label-for="sort" :description="$t('search.notFullySupported')">
           <multiselect
             id="sort" :value="sortTerm" @input="sortFieldSet"
@@ -110,7 +95,7 @@
 </template>
 
 <script>
-import { BDropdown, BDropdownItem, BForm, BFormGroup, BFormInput, BFormCheckbox } from 'bootstrap-vue';
+import { BForm, BFormGroup, BFormInput, BFormCheckbox } from 'bootstrap-vue';
 import Multiselect from 'vue-multiselect';
 
 import { mapGetters, mapState } from "vuex";
@@ -121,13 +106,10 @@ import Utils from '../utils';
 export default {
   name: 'ItemFilter',
   components: {
-    BDropdown,
-    BDropdownItem,
     BForm,
     BFormGroup,
     BFormInput,
     BFormCheckbox,
-    QueryableInput: () => import('./QueryableInput.vue'),
     Loading,
     Map: () => import('./Map.vue'),
     SortButtons: () => import('./SortButtons.vue'),
@@ -299,6 +281,15 @@ export default {
         datetime = null;
       }
       this.$set(this.query, 'datetime', datetime);
+    },
+    setForecastDatetime(datetime) {
+      if (datetime.find(dt => dt instanceof Date)) {
+        datetime = datetime.map(Utils.dateToUTC);
+      }
+      else {
+        datetime = null;
+      }
+      this.$set(this.query, 'forecastDatetime', datetime);
     },
     addCollection(collection) {
       this.selectedCollections.push(collection);

@@ -1,23 +1,28 @@
 <template>
-  <b-container id="stac-browser">
-    <Authentication v-if="doAuth.length > 0" />
-    <ErrorAlert class="global-error" v-if="globalError" v-bind="globalError" @close="hideError" />
-    <Sidebar v-if="sidebar" />
-    <!-- Header -->
-    <header>
-      <div class="logo">{{ displayCatalogTitle }}</div>
-      <StacHeader @enableSidebar="sidebar = true" />
-    </header>
-    <!-- Content (Item / Catalog) -->
-    <router-view />
-    <footer>
-      <i18n tag="small" path="poweredBy" class="poweredby text-muted">
-        <template #link>
-          <a href="https://github.com/radiantearth/stac-browser" target="_blank">STAC Browser</a> {{ browserVersion }}
-        </template>
-      </i18n>
-    </footer>
-  </b-container>
+  <div>
+    <b-container fluid tag="header" class="portal-logo">
+      <a class="portal-logo" :href="toBrowserUrl('/', store)"><img alt="logo" src="@/theme/ESA_Logo.svg"></a>
+    </b-container>
+    <b-container id="stac-browser">
+      <Authentication v-if="doAuth.length > 0" />
+      <ErrorAlert class="global-error" v-if="globalError" v-bind="globalError" @close="hideError" />
+      <Sidebar v-if="sidebar" />
+      <!-- Header -->
+      <header>
+        <div class="logo">{{ displayCatalogTitle }}</div>
+        <StacHeader @enableSidebar="sidebar = true" />
+      </header>
+      <!-- Content (Item / Catalog) -->
+      <router-view />
+      <footer>
+        <i18n tag="small" path="poweredBy" class="poweredby text-muted">
+          <template #link>
+            <a href="https://github.com/radiantearth/stac-browser" target="_blank">STAC Browser</a> {{ browserVersion }}
+          </template>
+        </i18n>
+      </footer>
+    </b-container>
+  </div>
 </template>
 
 <script>
@@ -27,6 +32,13 @@ import Vuex, { mapActions, mapGetters, mapState } from 'vuex';
 import CONFIG from './config';
 import getRoutes from "./router";
 import getStore from "./store";
+
+function toBrowserUrl(path, store) {
+  if (store.state.pathPrefix) {
+    return store.state.pathPrefix.replace(/\/$/, '') + path;
+  }
+  return path;
+}
 
 import {
   AlertPlugin, BadgePlugin, ButtonGroupPlugin, ButtonPlugin,
@@ -105,7 +117,9 @@ export default {
     return {
       sidebar: false,
       error: null,
-      onDataLoaded: null
+      onDataLoaded: null,
+      toBrowserUrl,
+      store: this.$store,
     };
   },
   computed: {

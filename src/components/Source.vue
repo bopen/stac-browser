@@ -7,23 +7,6 @@
       <b-button size="sm" variant="outline-primary" id="popover-share" :title="$t('source.share.withOthers')">
         <b-icon-share /> <span class="button-label">{{ $t('source.share.label') }}</span>
       </b-button>
-      <b-dropdown size="sm" variant="outline-primary" right :title="$t('source.language.switch')">
-        <template #button-content>
-          <b-icon-flag /> <span class="button-label">{{ $t('source.language.label', {currentLanguage}) }}</span>
-        </template>
-        <b-dropdown-item
-          v-for="l of languages" :key="l.code" class="lang-item"
-          @click="switchLocale({locale: l.code, userSelected: true})"
-        >
-          <b-icon-check v-if="locale === l.code" />
-          <b-icon-blank v-else />
-          <span class="title">
-            {{ l.native }}
-            <template v-if="l.global && l.global !== l.native"> / {{ l.global }}</template>
-          </span>
-          <b-icon-exclamation-triangle v-if="supportsLanguageExt && (!l.ui || !l.data)" :title="l.ui ? $t('source.language.onlyUI') : $t('source.language.onlyData')" class="ml-2" />
-        </b-dropdown-item>
-      </b-dropdown>
     </b-button-group>
     <b-popover
       v-if="stacUrl" target="popover-link" triggers="focus" placement="bottom"
@@ -59,8 +42,7 @@
 
 <script>
 import { 
-  BIconBlank, BIconCheck, BIconEnvelope, BIconExclamationTriangle, BIconFlag, BIconLink, BIconShare, BIconTwitter,
-  BDropdown, BDropdownItem, BPopover } from 'bootstrap-vue';
+  BIconEnvelope, BIconLink, BIconShare, BIconTwitter, BPopover } from 'bootstrap-vue';
 import { mapActions, mapGetters, mapState } from 'vuex';
 
 import Url from './Url.vue';
@@ -74,13 +56,7 @@ const LANGUAGE_EXT = 'https://stac-extensions.github.io/language/v1.*/schema.jso
 export default {
     name: "Source",
     components: {
-        BDropdown,
-        BDropdownItem,
-        BIconBlank,
-        BIconCheck,
         BIconEnvelope,
-        BIconExclamationTriangle,
-        BIconFlag,
         BIconLink,
         BIconShare,
         BIconTwitter,
