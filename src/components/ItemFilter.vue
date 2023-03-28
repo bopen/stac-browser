@@ -13,10 +13,10 @@
           />
         </b-form-group>
 
-        <b-form-group v-if="canFilterExtents" :label="$t('search.forecast_ReferenceDatetime')" label-for="forecast:reference_datetime" :description="$t('search.dateDescription')">
+        <b-form-group v-if="canFilterExtents" :label="$t('search.forecast:reference_datetime')" label-for="forecast:reference_datetime" :description="$t('search.dateDescription')">
           <date-picker
-            range id="dateforecast:reference_datetimetime" :lang="datepickerLang" :format="datepickerFormat"
-            :value="query.forecastDatetime" @input="setForecastDatetime" input-class="form-control mx-input"
+            range id="dateforecast:reference_datetime" :lang="datepickerLang" :format="datepickerFormat"
+            :value="query.reference_datetime" @input="setReferenceDatetime" input-class="form-control mx-input"
           />
         </b-form-group>
 
@@ -190,6 +190,9 @@ export default {
         if (Array.isArray(query.datetime)) {
           query.datetime = query.datetime.map(Utils.dateFromUTC);
         }
+        else if (Array.isArray(query.reference_datetime)) {
+          query.reference_datetime = query.reference_datetime.map(Utils.dateFromUTC);
+        }
         else if (query.filters.length > 0) {
           query.filters = query.filters.map(f => Object.assign({}, f));
         }
@@ -282,14 +285,14 @@ export default {
       }
       this.$set(this.query, 'datetime', datetime);
     },
-    setForecastDatetime(datetime) {
+    setReferenceDatetime(datetime) {
       if (datetime.find(dt => dt instanceof Date)) {
         datetime = datetime.map(Utils.dateToUTC);
       }
       else {
         datetime = null;
       }
-      this.$set(this.query, 'forecastDatetime', datetime);
+      this.$set(this.query, 'reference_datetime', datetime);
     },
     addCollection(collection) {
       this.selectedCollections.push(collection);

@@ -272,6 +272,9 @@ export default class Utils {
       if (key === 'datetime') {
         value = Utils.formatDatetimeQuery(value);
       }
+      else if (key === 'reference_datetime') {
+        value = Utils.formatDatetimeQuery(value);
+      }
       else if (key === 'bbox') {
         value = Utils.formatBboxQuery(value);
       }
