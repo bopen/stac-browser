@@ -208,6 +208,7 @@
     "notSupported": "Item Search is not supported by the API.",
     "placeholder": "Search...",
     "selectCollections": "Select one or multiple collections...",
+    "enterHorizon": "Enter forecast horizon...",
     "sortOptions": {
       "datetime": "Date and Time",
       "id": "ID",
@@ -216,6 +217,8 @@
     "spatialExtent": "Spatial Extent",
     "temporalExtent": "Temporal Extent",
     "forecast:reference_datetime": "Forecast reference date",
+    "forecast:horizon": "Time to forecast",
+    "horizonDescription": "Time between the reference date and the forecast.",
     "title": "Search"
   },
   "showMore": "Show more...",

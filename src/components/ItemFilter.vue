@@ -6,48 +6,63 @@
 
         <b-card-title v-if="title" :title="title" />
 
-        <b-form-group v-if="canFilterExtents" :label="$t('search.temporalExtent')" label-for="datetime" :description="$t('search.dateDescription')">
+        <b-form-group
+          v-if="canFilterExtents" :label="$t('search.temporalExtent')" label-for="datetime"
+          :description="$t('search.dateDescription')"
+        >
           <date-picker
             range id="datetime" :lang="datepickerLang" :format="datepickerFormat"
-            :value="query.datetime" @input="setDateTime" input-class="form-control mx-input"
+            :value="query.datetime"
+            @input="setDateTime" input-class="form-control mx-input"
           />
         </b-form-group>
 
-        <b-form-group v-if="canFilterExtents" :label="$t('search.forecast:reference_datetime')" label-for="forecast:reference_datetime" :description="$t('search.dateDescription')">
+        <b-form-group
+          v-if="canFilterExtents" :label="$t('search.forecast:reference_datetime')"
+          label-for="forecast:reference_datetime" :description="$t('search.dateDescription')"
+        >
           <date-picker
             range id="dateforecast:reference_datetime" :lang="datepickerLang" :format="datepickerFormat"
             :value="query.reference_datetime" @input="setReferenceDatetime" input-class="form-control mx-input"
           />
         </b-form-group>
 
+        <b-form-group
+          v-if="canFilterExtents" :label="$t('search.forecast:horizon')" label-for="forecast:horizon"
+          :description="$t('search.horizonDescription')"
+        >
+          <multiselect
+            id="dateforecast:horizon" :options="horizons" :value="selectedHorizon" track-by="value"
+            label="text" 
+            @input="setHorizon" :placeholder="$t('search.enterHorizon')"
+          >
+            <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+          </multiselect>
+        </b-form-group>
+
         <b-form-group v-if="canFilterExtents" :label="$t('search.spatialExtent')" label-for="provideBBox">
-          <b-form-checkbox id="provideBBox" v-model="provideBBox" value="1" @change="setBBox">{{ $t('search.filterBySpatialExtent') }}</b-form-checkbox>
+          <b-form-checkbox id="provideBBox" v-model="provideBBox" value="1" @change="setBBox">
+            {{
+              $t('search.filterBySpatialExtent') }}
+          </b-form-checkbox>
           <Map class="mb-4" v-if="provideBBox" :stac="stac" selectBounds @bounds="setBBox" scrollWheelZoom />
         </b-form-group>
 
         <b-form-group v-if="!collectionOnly" :label="$tc('stacCollection', collections.length)" label-for="collections">
           <multiselect
-            v-if="collections.length > 0"
-            id="collections" :value="selectedCollections" @input="setCollections"
-            :placeholder="$t('search.selectCollections')"
-            :tagPlaceholder="$t('search.addCollections')"
-            :selectLabel="$t('multiselect.selectLabel')"
-            :selectedLabel="$t('multiselect.selectedLabel')"
-            :deselectLabel="$t('multiselect.deselectLabel')"
-            :limitText="limitText"
-            :options="collections" multiple track-by="value" label="text"
+            v-if="collections.length > 0" id="collections" :value="selectedCollections" @input="setCollections"
+            :placeholder="$t('search.selectCollections')" :tagPlaceholder="$t('search.addCollections')"
+            :selectLabel="$t('multiselect.selectLabel')" :selectedLabel="$t('multiselect.selectedLabel')"
+            :deselectLabel="$t('multiselect.deselectLabel')" :limitText="limitText" :options="collections" multiple
+            track-by="value" label="text"
           />
           <multiselect
-            v-else
-            id="collections" :value="selectedCollections" @input="setCollections"
-            multiple taggable :options="query.collections"
-            :placeholder="$t('search.enterCollections')"
-            :tagPlaceholder="$t('search.addCollections')"
-            :selectLabel="$t('multiselect.selectLabel')"
-            :selectedLabel="$t('multiselect.selectedLabel')"
-            :deselectLabel="$t('multiselect.deselectLabel')"
-            :limitText="limitText"
-            @tag="addCollection"
+            v-else id="collections" :value="selectedCollections" @input="setCollections"
+            multiple taggable
+            :options="query.collections" :placeholder="$t('search.enterCollections')"
+            :tagPlaceholder="$t('search.addCollections')" :selectLabel="$t('multiselect.selectLabel')"
+            :selectedLabel="$t('multiselect.selectedLabel')" :deselectLabel="$t('multiselect.deselectLabel')"
+            :limitText="limitText" @tag="addCollection"
           >
             <template #noOptions>{{ $t('search.noOptions') }}</template>
           </multiselect>
@@ -55,34 +70,36 @@
 
         <b-form-group v-if="!collectionOnly" :label="$t('search.itemIds')" label-for="ids">
           <multiselect
-            id="ids" :value="query.ids" @input="setIds"
-            multiple taggable :options="query.ids"
-            :placeholder="$t('search.enterItemIds')"
-            :tagPlaceholder="$t('search.addItemIds')"
-            :noOptions="$t('search.addItemIds')"
-            @tag="addId"
+            id="ids" :value="query.ids" @input="setIds" multiple
+            taggable :options="query.ids"
+            :placeholder="$t('search.enterItemIds')" :tagPlaceholder="$t('search.addItemIds')"
+            :noOptions="$t('search.addItemIds')" @tag="addId"
           >
             <template #noOptions>{{ $t('search.noOptions') }}</template>
           </multiselect>
         </b-form-group>
 
-        <b-form-group v-if="canSort" :label="$t('sort.title')" label-for="sort" :description="$t('search.notFullySupported')">
+        <b-form-group
+          v-if="canSort" :label="$t('sort.title')" label-for="sort"
+          :description="$t('search.notFullySupported')"
+        >
           <multiselect
-            id="sort" :value="sortTerm" @input="sortFieldSet"
-            :options="sortOptions" track-by="value" label="text"
-            :placeholder="$t('default')"
-            :selectLabel="$t('multiselect.selectLabel')"
-            :selectedLabel="$t('multiselect.selectedLabel')"
-            :deselectLabel="$t('multiselect.deselectLabel')"
+            id="sort" :value="sortTerm" @input="sortFieldSet" :options="sortOptions"
+            track-by="value"
+            label="text" :placeholder="$t('default')" :selectLabel="$t('multiselect.selectLabel')"
+            :selectedLabel="$t('multiselect.selectedLabel')" :deselectLabel="$t('multiselect.deselectLabel')"
           />
           <SortButtons v-if="sortTerm" class="mt-1" :value="sortOrder" enforce @input="sortDirectionSet" />
         </b-form-group>
 
-        <b-form-group :label="$t('search.itemsPerPage')" label-for="limit" :description="$t('search.itemsPerPageDescription', {maxItems})">
+        <b-form-group
+          :label="$t('search.itemsPerPage')" label-for="limit"
+          :description="$t('search.itemsPerPageDescription', { maxItems })"
+        >
           <b-form-input
             id="limit" :value="query.limit" @change="setLimit" min="1"
             :max="maxItems" type="number"
-            :placeholder="$t('defaultWithValue', {value: itemsPerPage})"
+            :placeholder="$t('defaultWithValue', { value: itemsPerPage })"
           />
         </b-form-group>
       </b-card-body>
@@ -156,7 +173,8 @@ export default {
       provideBBox: false,
       query: this.getDefaultValues(),
       loaded: false,
-      selectedCollections: []
+      selectedCollections: [],
+      selectedHorizon: null,
     };
   },
   computed: {
@@ -179,7 +197,13 @@ export default {
           value: c.id,
           text: c.title || c.id
         }))
-        .sort((a,b) => a.text.localeCompare(b.text, this.uiLanguage));
+        .sort((a, b) => a.text.localeCompare(b.text, this.uiLanguage));
+    },
+    horizons() {
+      let horizons = Array.from({length: 48}, (v, k) => k + 1).map(v => v * 3);
+      return [{ value: "PT0H", text: "" }].concat(horizons.map(v => (
+        { value: `PT${v}H`, text: `PT${v}H` }
+      )));
     }
   },
   watch: {
@@ -212,7 +236,7 @@ export default {
     }
     if (!this.collectionOnly && this.apiCollections.length === 0) {
       promises.push(
-        this.$store.dispatch('loadNextApiCollections', {stac: this.root, show: true})
+        this.$store.dispatch('loadNextApiCollections', { stac: this.root, show: true })
           .catch(error => console.error(error))
       );
     }
@@ -220,7 +244,7 @@ export default {
   },
   methods: {
     limitText(count) {
-      return this.$t("multiselect.andMore", {count});
+      return this.$t("multiselect.andMore", { count });
     },
     sortFieldSet(value) {
       this.sortTerm = value;
@@ -245,6 +269,7 @@ export default {
         limit: null,
         ids: [],
         collections: [],
+        horizons: [],
         sortby: null,
         filters: []
       };
@@ -302,6 +327,10 @@ export default {
       this.selectedCollections = collections;
       this.$set(this.query, 'collections', collections.map(c => c.value));
     },
+    setHorizon(horizon) {
+      this.selectedHorizon = horizon;
+      this.$set(this.query, 'horizon', horizon.value);
+    },
     addId(id) {
       this.query.ids.push(id);
     },
@@ -334,6 +363,7 @@ $primary-color: map-get($theme-colors, "primary");
 
 // Multiselect related style
 @import '~vue-multiselect/dist/vue-multiselect.min.css';
+
 #stac-browser {
   .multiselect__tags:focus-within {
     border-color: #48cce1;
@@ -345,7 +375,7 @@ $primary-color: map-get($theme-colors, "primary");
     color: #495057;
     border-color: #495057 transparent transparent;
   }
-  
+
   .multiselect__tags,
   .multiselect__single {
     border-color: #ced4da;
@@ -385,11 +415,11 @@ $primary-color: map-get($theme-colors, "primary");
   }
 
   .form-group {
-    > div {
+    >div {
       margin-left: 1em;
     }
 
-    > label {
+    >label {
       font-weight: 600;
     }
   }
