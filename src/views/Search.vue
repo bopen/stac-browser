@@ -14,9 +14,9 @@
         <b-alert v-else-if="!hasItems && !hasFilters" variant="info" show>{{ $t('search.modifyCriteria') }}</b-alert>
         <b-alert v-else-if="!hasItems" variant="warning" show>{{ $t('search.noItemsFound') }}</b-alert>
         <template v-if="hasItems">
-          <div id="search-map">
+          <!--div id="search-map">
             <Map :stac="parent" :stacLayerData="itemCollection" scrollWheelZoom popover />
-          </div>
+          </div-->
           <Items
             :stac="parent" :items="apiItems" :api="true" :allowFilter="false"
             :pagination="itemPages" @paginate="paginateItems"
@@ -44,7 +44,6 @@ export default {
     ItemFilter,
     Items,
     Loading,
-    Map: () => import('../components/Map.vue')
   },
   mixins: [
     apiCapabilitiesMixinGenerator(false)

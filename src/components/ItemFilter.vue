@@ -27,7 +27,7 @@
           />
         </b-form-group>
 
-        <b-form-group
+        <!--b-form-group
           v-if="canFilterExtents" :label="$t('search.forecast:horizon')" label-for="forecast:horizon"
           :description="$t('search.horizonDescription')"
         >
@@ -38,12 +38,12 @@
           >
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
           </multiselect>
-        </b-form-group>
+        </b-form-group-->
 
-        <b-form-group v-if="canFilterExtents" :label="$t('search.spatialExtent')" label-for="provideBBox">
+        <!--b-form-group v-if="canFilterExtents" :label="$t('search.spatialExtent')" label-for="provideBBox">
           <b-form-checkbox id="provideBBox" v-model="provideBBox" value="1" @change="setBBox()">{{ $t('search.filterBySpatialExtent') }}</b-form-checkbox>
           <Map class="mb-4" v-if="provideBBox" :stac="stac" selectBounds @bounds="setBBox" scrollWheelZoom />
-        </b-form-group>
+        </b-form-group-->
 
         <b-form-group v-if="!collectionOnly" :label="$tc('stacCollection', collections.length)" label-for="collections">
           <multiselect
@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import { BForm, BFormGroup, BFormInput, BFormCheckbox } from 'bootstrap-vue';
+import { BForm, BFormGroup, BFormInput } from 'bootstrap-vue';
 import Multiselect from 'vue-multiselect';
 
 import { mapGetters, mapState } from "vuex";
@@ -123,9 +123,7 @@ export default {
     BForm,
     BFormGroup,
     BFormInput,
-    BFormCheckbox,
     Loading,
-    Map: () => import('./Map.vue'),
     SortButtons: () => import('./SortButtons.vue'),
     Multiselect
   },
