@@ -35,7 +35,9 @@ function getStore(config, router) {
     apiItemsLink: null,
     apiItemsPagination: {},
 
-    queryables: null
+    queryables: null,
+
+    referenceDates: [],
   });
 
   const catalogDefaults = () => ({
@@ -593,6 +595,10 @@ function getStore(config, router) {
         else {
           state.queryables = [];
         }
+      },
+      addForecastReferenceDates(state, referenceDates) {
+        console.log(referenceDates);
+        state.referenceDates = referenceDates;
       }
     },
     actions: {
@@ -947,6 +953,17 @@ function getStore(config, router) {
           console.log('Queryables not supported by API');
         }
         cx.commit('addQueryables', schemas);
+      },
+      async loadForecastReferenceDates(cx, { stac }) {
+        let schemas;
+        try {
+          const href = `${stac.getAbsoluteUrl()}/vocabularies/forecast:reference-dates`;
+          const response = await stacRequest(cx, href);
+          schemas = response.data;
+        } catch (error) {
+          console.log('ForecastReferenceDates not supported by API');
+        }
+        cx.commit('addForecastReferenceDates', schemas);
       },
       async loadGeoJson(cx, link) {
         try {

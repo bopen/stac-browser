@@ -80,7 +80,6 @@ export default {
     Items,
     Keywords: () => import('../components/Keywords.vue'),
     Links: () => import('../components/Links.vue'),
-    Map: () => import('../components/Map.vue'),
     Metadata: () => import('../components/Metadata.vue'),
     Providers: () => import('../components/Providers.vue'),
     ReadMore,

@@ -238,6 +238,13 @@ export default class Utils {
     }).join('/');
   }
 
+  static formatDateISO(value) {
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+    return value;
+  }
+
   static addFiltersToLink(link, filters = {}) {
     // Construct new link with search params
     let url = new URI(link.href);
@@ -257,13 +264,13 @@ export default class Utils {
       if (key === 'datetime') {
         value = Utils.formatDatetimeQuery(value);
       }
-      else if (key === 'reference_datetime') {
-        value = Utils.formatDatetimeQuery(value);
-      }
       else if (key === 'bbox' && Array.isArray(value)) {
         value = value.join(',');
       }
-      else if ((key === 'collections' || key === 'ids') && Array.isArray(value)) {
+      else if ((key === 'collections' || key === 'ids' || key === 'reference_datetime' || key === 'horizon') && Array.isArray(value)) {
+        if (key === 'reference_datetime') {
+          value = value.map(dt => Utils.formatDateISO(dt));
+        }
         value = value.join(',');
       }
       else if (key === 'filters') {

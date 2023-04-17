@@ -11,8 +11,8 @@
           :description="$t('search.dateDescription')"
         >
           <date-picker
-            range id="datetime" :lang="datepickerLang" :format="datepickerFormat"
-            :value="query.datetime"
+            range id="datetime" :lang="datepickerLang" format="YYYY-MM-DD HH:mm"
+            :value="query.datetime" type="datetime"
             @input="setDateTime" input-class="form-control mx-input"
           />
         </b-form-group>
@@ -21,9 +21,16 @@
           v-if="canFilterExtents" :label="$t('search.forecast:reference_datetime')"
           label-for="forecast:reference_datetime" :description="$t('search.dateDescription')"
         >
-          <date-picker
+          <!--date-picker
             range id="dateforecast:reference_datetime" :lang="datepickerLang" :format="datepickerFormat"
             :value="query.reference_datetime" @input="setReferenceDatetime" input-class="form-control mx-input"
+          /-->
+
+          <multiselect
+            v-if="referenceDatesOptions.length > 0"
+            id="dateforecast:reference_datetime" :options="referenceDatesOptions" :value="selectedReferenceDates" track-by="value"
+            label="text" multiple
+            @input="setReferenceDates" :placeholder="$t('search.enterReferenceDate')"
           />
         </b-form-group>
 
@@ -170,10 +177,11 @@ export default {
       loaded: false,
       selectedCollections: [],
       selectedHorizon: null,
+      selectedReferenceDates: []
     };
   },
   computed: {
-    ...mapState(['itemsPerPage', 'uiLanguage', 'queryables', 'apiCollections']),
+    ...mapState(['itemsPerPage', 'uiLanguage', 'queryables', 'apiCollections', 'referenceDates']),
     ...mapGetters(['hasMoreCollections', 'root']),
     sortOptions() {
       return [
@@ -199,6 +207,13 @@ export default {
       return [{ value: "PT0H", text: "" }].concat(horizons.map(v => (
         { value: `PT${v}H`, text: `PT${v}H` }
       )));
+    },
+    referenceDatesOptions() {
+      console.log(this.referenceDates);
+      return this.referenceDates.map(d => ({
+        value: d,
+        text: new Date(d['forecast:reference_datetime']).toUTCString() + ' — ' + d['forecast:horizon']
+      }));
     }
   },
   watch: {
@@ -208,9 +223,6 @@ export default {
         let query = Object.assign({}, this.getDefaultValues(), value);
         if (Array.isArray(query.datetime)) {
           query.datetime = query.datetime.map(Utils.dateFromUTC);
-        }
-        else if (Array.isArray(query.reference_datetime)) {
-          query.reference_datetime = query.reference_datetime.map(Utils.dateFromUTC);
         }
         else if (query.filters.length > 0) {
           query.filters = query.filters.map(f => Object.assign({}, f));
@@ -235,6 +247,10 @@ export default {
           .catch(error => console.error(error))
       );
     }
+    promises.push(
+      this.$store.dispatch('loadForecastReferenceDates', { stac: this.root, show: true })
+        .catch(error => console.error(error))
+    );
     Promise.all(promises).finally(() => this.loaded = true);
   },
   methods: {
@@ -266,7 +282,8 @@ export default {
         collections: [],
         horizons: [],
         sortby: null,
-        filters: []
+        filters: [],
+        referenceDatesOptions: [],
       };
     },
     onSubmit() {
@@ -318,14 +335,17 @@ export default {
       }
       this.$set(this.query, 'datetime', datetime);
     },
-    setReferenceDatetime(datetime) {
-      if (datetime.find(dt => dt instanceof Date)) {
-        datetime = datetime.map(Utils.dateToUTC);
-      }
-      else {
-        datetime = null;
-      }
-      this.$set(this.query, 'reference_datetime', datetime);
+    setReferenceDates(dateWithHorizon) {
+      console.log(dateWithHorizon);
+      this.selectedReferenceDates = dateWithHorizon;
+      const referenceDates = [];
+      const horizons = [];
+      dateWithHorizon.forEach(d => {
+        referenceDates.push(d.value['forecast:reference_datetime']);
+        horizons.push(d.value['forecast:horizon']);
+      });
+      this.$set(this.query, 'reference_datetime', referenceDates);
+      this.$set(this.query, 'horizon', horizons);
     },
     addCollection(collection) {
       this.selectedCollections.push(collection);
