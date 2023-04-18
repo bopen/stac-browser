@@ -19,7 +19,7 @@
 
         <b-form-group
           v-if="canFilterExtents" :label="$t('search.forecast:reference_datetime')"
-          label-for="forecast:reference_datetime" :description="$t('search.dateDescription')"
+          label-for="forecast:reference_datetime"
         >
           <!--date-picker
             range id="dateforecast:reference_datetime" :lang="datepickerLang" :format="datepickerFormat"
@@ -209,7 +209,6 @@ export default {
       )));
     },
     referenceDatesOptions() {
-      console.log(this.referenceDates);
       return this.referenceDates.map(d => ({
         value: d,
         text: new Date(d['forecast:reference_datetime']).toUTCString() + ' — ' + d['forecast:horizon']
@@ -336,7 +335,6 @@ export default {
       this.$set(this.query, 'datetime', datetime);
     },
     setReferenceDates(dateWithHorizon) {
-      console.log(dateWithHorizon);
       this.selectedReferenceDates = dateWithHorizon;
       const referenceDates = [];
       const horizons = [];

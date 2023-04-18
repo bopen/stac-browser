@@ -597,7 +597,6 @@ function getStore(config, router) {
         }
       },
       addForecastReferenceDates(state, referenceDates) {
-        console.log(referenceDates);
         state.referenceDates = referenceDates;
       }
     },

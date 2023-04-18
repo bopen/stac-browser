@@ -219,7 +219,8 @@
     "forecast:reference_datetime": "Forecast reference date",
     "forecast:horizon": "Time to forecast",
     "horizonDescription": "Time between the reference date and the forecast.",
-    "title": "Search"
+    "title": "Search",
+    "enterReferenceDate": "Select reference date and horizon"
   },
   "showMore": "Show more...",
   "sidebar": {
