@@ -12,7 +12,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build -- --catalogUrl=$catalogURL
+RUN npm run build -- --catalogUrl=$catalogURL --supportedLocales en
 
 EXPOSE 8080
 
