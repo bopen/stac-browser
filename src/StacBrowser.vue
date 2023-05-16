@@ -1,7 +1,8 @@
 <template>
   <div>
-    <b-container fluid tag="header" class="portal-logo">
-      <a class="portal-logo" :href="toBrowserUrl('/', store)"><img alt="logo" src="@/theme/ESA_Logo.svg"></a>
+    <b-container fluid tag="header" class="portal-header">
+      <a class="portal-logo" :href="toBrowserUrl('/', store)"><img alt="B-Open Logo" src="@/theme/bopen-white.png"></a>
+      <img alt="ESA logo" src="@/theme/ESA_Logo.svg">
     </b-container>
     <b-container id="stac-browser">
       <Authentication v-if="doAuth.length > 0" />

@@ -13,7 +13,7 @@
           <date-picker
             range id="datetime" :lang="datepickerLang" format="YYYY-MM-DD HH:mm"
             :value="query.datetime" type="datetime"
-            @input="setDateTime" input-class="form-control mx-input"
+            @input="setDateTime" input-class="form-control mx-input" minute-step="30"
           />
         </b-form-group>
 
@@ -209,9 +209,12 @@ export default {
       )));
     },
     referenceDatesOptions() {
-      return this.referenceDates.map(d => ({
+      if (!this.referenceDates['reference_datetimes']) {
+        return [];
+      }
+      return this.referenceDates['reference_datetimes'].map(d => ({
         value: d,
-        text: new Date(d['forecast:reference_datetime']).toUTCString() + ' — ' + d['forecast:horizon']
+        text: new Date(d).toUTCString()
       }));
     }
   },
@@ -334,16 +337,14 @@ export default {
       }
       this.$set(this.query, 'datetime', datetime);
     },
-    setReferenceDates(dateWithHorizon) {
-      this.selectedReferenceDates = dateWithHorizon;
+    setReferenceDates(dates) {
+      this.selectedReferenceDates = dates;
       const referenceDates = [];
-      const horizons = [];
-      dateWithHorizon.forEach(d => {
-        referenceDates.push(d.value['forecast:reference_datetime']);
-        horizons.push(d.value['forecast:horizon']);
+      console.log(dates);
+      dates.forEach(d => {
+        referenceDates.push(d.value);
       });
       this.$set(this.query, 'reference_datetime', referenceDates);
-      this.$set(this.query, 'horizon', horizons);
     },
     addCollection(collection) {
       this.selectedCollections.push(collection);

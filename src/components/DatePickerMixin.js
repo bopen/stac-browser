@@ -7,7 +7,7 @@ export default {
   data() {
     return {
       datepickerLang: null,
-      datepickerFormat: 'YYYY-MM-DD'
+      datepickerFormat: 'YYYY-MM-DD',
     };
   },
   computed: {
