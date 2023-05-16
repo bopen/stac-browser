@@ -13,7 +13,7 @@
           <date-picker
             range id="datetime" :lang="datepickerLang" format="YYYY-MM-DD HH:mm"
             :value="query.datetime" type="datetime"
-            @input="setDateTime" input-class="form-control mx-input" minute-step="30"
+            @input="setDateTime" input-class="form-control mx-input" :minute-step="30"
           />
         </b-form-group>
 
@@ -170,7 +170,7 @@ export default {
   data() {
     return {
       sortOrder: 1,
-      sortTerm: null,
+      sortTerm: { value: 'datetime', text: this.$t('search.sortOptions.datetime') },
       maxItems: 10000,
       provideBBox: false,
       query: this.getDefaultValues(),
@@ -185,10 +185,10 @@ export default {
     ...mapGetters(['hasMoreCollections', 'root']),
     sortOptions() {
       return [
-        { value: null, text: this.$t('default') },
-        { value: 'properties.datetime', text: this.$t('search.sortOptions.datetime') },
+        // { value: null, text: this.$t('default') },
+        { value: 'datetime', text: this.$t('search.sortOptions.datetime') },
         { value: 'id', text: this.$t('search.sortOptions.id') },
-        { value: 'properties.title', text: this.$t('search.sortOptions.title') }
+        // { value: 'title', text: this.$t('search.sortOptions.title') }
       ];
     },
     collections() {
@@ -366,8 +366,8 @@ export default {
     },
     formatSort() {
       if (this.sortTerm && this.sortOrder) {
-        let order = this.sortOrder < 0 ? '-' : '';
-        return `${order}${this.sortTerm}`;
+        let order = this.sortOrder < 0 ? '-' : '+';
+        return `${order}${this.sortTerm.value}`;
       }
       else {
         return null;
