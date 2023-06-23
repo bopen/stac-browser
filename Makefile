@@ -1,5 +1,5 @@
 IMAGE = webportal
-REGISTRY := z794512u.gra7.container-registry.ovh.net/test
+REGISTRY := 926s4ys1.gra7.container-registry.ovh.net/hedp
 
 docker-run:
 	docker run --rm -ti -v $(PWD):/srv $(REGISTRY)/$(IMAGE)
