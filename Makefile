@@ -1,5 +1,12 @@
+.DEFAULT_GOAL := dev
+
 IMAGE = webportal
 REGISTRY := 926s4ys1.gra7.container-registry.ovh.net/hedp
+CATALOGUE_URL := "http://localhost:8000"
+
+dev:
+	@echo "Catalogue URL is $(CATALOGUE_URL)"
+	npm start -- --open --catalogUrl=$(CATALOGUE_URL) --locale=en --supportedLocales en
 
 docker-run:
 	docker run --rm -ti -v $(PWD):/srv $(REGISTRY)/$(IMAGE)

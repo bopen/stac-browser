@@ -39,5 +39,10 @@ module.exports = {
     requestHeaders: {},
     requestQueryParameters: {},
     preprocessSTAC: null,
-    authConfig: null
+    authConfig: {
+        type: 'header',
+        key: 'API-KEY',
+        // formatter: token => `Bearer ${token}`, // This is an example, there's also the simpler variant to just provide the string 'Bearer' in this case
+        description: `To access the catalogue you must provide your API key.`
+    }
 };
