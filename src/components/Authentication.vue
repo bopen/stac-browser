@@ -55,6 +55,7 @@ export default {
     },
     async submit() {
       await this.$store.dispatch('setAuth', this.token);
+      sessionStorage.setItem('auth', this.token);
       await this.$store.dispatch('retryAfterAuth');
       this.$store.commit('requestAuth', null);
     }

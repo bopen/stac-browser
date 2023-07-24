@@ -43,7 +43,7 @@ function getStore(config, router) {
   const catalogDefaults = () => ({
     queue: [],
     privateQueryParameters: {},
-    authData: null,
+    authData: sessionStorage.getItem('auth') || null,
     doAuth: [],
     conformsTo: [],
     dataLanguage: null,

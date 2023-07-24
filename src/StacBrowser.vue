@@ -124,7 +124,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['allowSelectCatalog', 'data', 'dataLanguage', 'description', 'doAuth', 'globalError', 'stateQueryParameters', 'title', 'uiLanguage', 'url']),
+    ...mapState(['allowSelectCatalog', 'authData', 'data', 'dataLanguage', 'description', 'doAuth', 'globalError', 'stateQueryParameters', 'title', 'uiLanguage', 'url']),
     ...mapState({
       catalogUrlFromVueX: 'catalogUrl',
       detectLocaleFromBrowserFromVueX: 'detectLocaleFromBrowser',
@@ -277,7 +277,7 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
     this.$router.onReady(() => {
       this.detectLocale();
       this.parseQuery(this.$route);
@@ -300,6 +300,11 @@ export default {
       this.$store.commit(resetOp);
       this.parseQuery(to);
     });
+    
+    if (this.authData) {
+      await this.$store.dispatch('setAuth', sessionStorage.getItem('auth'));
+    }
+
   },
   mounted() {
     this.$root.$on('error', this.showError);
