@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := dev
 
-IMAGE = webportal
+IMAGE = stac-browser
 REGISTRY := 926s4ys1.gra7.container-registry.ovh.net/hedp
 CATALOGUE_URL := "http://localhost:8000"
 
@@ -12,7 +12,7 @@ docker-run:
 	docker run --rm -ti -v $(PWD):/srv $(REGISTRY)/$(IMAGE)
 
 docker-build:
-	docker build --build-arg catalogURL=https://hedp-dev.bopen.eu/api/stac/v1/ -t $(REGISTRY)/$(IMAGE) .
+	docker build --build-arg catalogURL=https://hedp-dev.bopen.eu/api/stac/v1/ --build-arg pathPrefix=/stac-browser/ -t $(REGISTRY)/$(IMAGE) .
 
 docker-push:
 	docker push $(REGISTRY)/$(IMAGE)

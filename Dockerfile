@@ -1,6 +1,7 @@
 FROM --platform=linux/amd64 node:lts-alpine
 
 ARG catalogURL
+ARG pathPrefix
 
 RUN npm install -g serve
 
@@ -12,7 +13,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build -- --catalogUrl=$catalogURL --supportedLocales en
+RUN npm run build -- --catalogUrl=$catalogURL --pathPrefix=$pathPrefix --supportedLocales en
 
 EXPOSE 8080
 
